@@ -61,13 +61,12 @@ calc_degree_of_freedom (const cdescent *cd)
 	int		j;
 	double	df = 0.;
 	for (j = 0; j < cd->beta->nz; j++) {
-		if (fabs (cd->beta->data[j]) > 0.) {
-			if (cd->lreg->is_regtype_lasso) df += 1.;
-			else {
-				double	gj = cd->lreg->lambda2 * cd->lreg->dtd[j];
-				if (!cd->lreg->xnormalized) gj /= cd->lreg->xtx[j];
-				df += 1. / (1. + gj);
-			}
+		double	ddf = 0.;
+		double	gj = (cd->lreg->is_regtype_lasso) ? DBL_EPSILON : cd->lreg->lambda2 * cd->lreg->dtd[j];
+		if (!cd->lreg->xnormalized) gj /= cd->lreg->xtx[j];
+		if (cd->n_updated[j] > 0) {
+			ddf = 1. - pow (gj / (1. + gj), (double) cd->n_updated[j]);
+			df += ddf / (1. + gj);
 		}
 	}
 	return df;

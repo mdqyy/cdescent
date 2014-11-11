@@ -29,10 +29,21 @@ cdescent_alloc (void)
 	cd->mu = NULL;
 	cd->nu = NULL;
 
+	cd->n_updated = NULL;
+
 	cd->parallel = false;
 	cd->total_iter = 0;
 
 	return cd;
+}
+
+static int *
+int_array_new (const int n)
+{
+	int		i;
+	int		*array = (int *) malloc (n * sizeof (int));
+	for (i = 0; i < n; i++) array[i] = 0;
+	return array;
 }
 
 /*** create new cdescent object ***/
@@ -73,6 +84,7 @@ cdescent_new (const linregmodel *lreg, const double tol, const int maxiter, bool
 		mm_real_set_all (cd->nu, 0.);	// in initial, set to 0
 	}
 
+	cd->n_updated = int_array_new (cd->lreg->x->n);
 	cd->maxiter = maxiter;
 	cd->parallel = parallel;
 
@@ -87,6 +99,7 @@ cdescent_free (cdescent *cd)
 		if (cd->beta) mm_real_free (cd->beta);
 		if (cd->mu) mm_real_free (cd->mu);
 		if (cd->nu) mm_real_free (cd->nu);
+		if (cd->n_updated) free (cd->n_updated);
 		free (cd);
 	}
 	return;

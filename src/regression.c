@@ -57,6 +57,7 @@ cdescent_update (cdescent *cd, int j, bool atomic, double *amax_eta)
 		if (!cd->lreg->is_regtype_lasso) axjpy (atomic, etaj, cd->lreg->d, j, cd->nu);
 		// update max( |eta| )
 		update_amax (atomic, amax_eta, abs_etaj);
+		cd->n_updated[j]++;
 	}
 	return;
 }

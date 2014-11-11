@@ -36,6 +36,8 @@ struct s_cdescent {
 	mm_dense			*mu;			// mu = X * beta, estimate of y
 	mm_dense			*nu;			// nu = D * beta
 
+	int					*n_updated;
+
 	int					total_iter;	// total number of iterations
 	int					maxiter;		// maximum number of iterations
 
